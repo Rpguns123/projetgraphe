@@ -14,6 +14,7 @@ public class Graphe {
 		nbSommet = n;
 	}
 
+
 	public Graphe clone(){
 		return new Graphe((HashMap<Integer, ArrayList<Integer>>)graphe.clone(), nbSommet);
 	}
@@ -39,44 +40,73 @@ public class Graphe {
 				cpt = 0;
 				int ligneMax = ligne.length();
 				String nombre = "";
-				for (int i = 0; i < ligneMax ; i++){
+				boolean MoinsUntrouve = false;
 
-					if(ligne.charAt(0) != ' '){
-						nombre += ligne.charAt(0);
-						if(i+1 != ligneMax){
-							ligne = ligne.substring(1);
-							if(ligne.charAt(0)==' '){
-								if (Integer.parseInt(nombre) != -1){
-									v.add(cpt, Integer.parseInt(nombre));
-									cpt++;
-									nombre="";
-								}					
+				if(ligneMax == 0){
+					System.out.println("Saisie incorrecte.\nVeuillez resaisir tout le graphe, (en commençant par le nombre de sommet).");
+					this.lireConsole();
+					//System.exit(0);
+				}
+
+				else{
+					int i = 0;
+					while (!MoinsUntrouve){
+						if(!MoinsUntrouve && i != ligneMax){	
+							if(ligne.charAt(0) == '-' && ligne.charAt(1) == '1'){
+								MoinsUntrouve = true;
 							}
-						}
-						else{
-							if(Integer.parseInt(nombre) != -1){
-								v.add(cpt, Integer.parseInt(nombre));
-								cpt++;
-								nombre="";
+							else{
+								if(ligne.charAt(0) != ' '){
+									nombre += ligne.charAt(0);
+									if(i+1 != ligneMax){
+										ligne = ligne.substring(1);
+										if(ligne.charAt(0)==' '){
+											if (Integer.parseInt(nombre) != -1){
+												v.add(cpt, Integer.parseInt(nombre));
+												cpt++;
+												nombre="";
+											}					
+										}
+									}
+									else{
+										if(Integer.parseInt(nombre) != -1){
+											v.add(cpt, Integer.parseInt(nombre));
+											cpt++;
+											nombre="";
+										}
+									}
+								}
+
+								else {
+									ligne = ligne.substring(1);
+								}
+								hm.put(cpt2, v);
+								cpt2++;
 							}
+							graphe = hm;
 						}
-					}
-					else {
-
-						ligne = ligne.substring(1);
-					}
-
-				} // Fin de la boucle for
-				hm.put(cpt2, v);
-				cpt2++;
-			}
-			graphe = hm;
-		}
+						else{ 
+							if(i == ligneMax && !MoinsUntrouve) {
+								System.out.println("Il faut saisir '-1' à la fin de chaque ligne.\nVeuillez resaisir tout le graphe, (en commençant par le nombre de sommet).");
+								System.out.println("Graphe incorrecte.\nVeuillez relancer le programme.");
+								this.lireConsole();
+								//break; 
+							}
+						} i++;
+					} // FIn du Deuxieme for
+				} // Fin du else 
+			} // Fin du premier For
+		} // Fin du try
 
 		catch (Exception e){
 			System.out.println(e.toString());
 		}
 	}
+
+	/*3
+	2 -1
+	3 -1
+	1 2 -1*/
 
 	public void lireFichier(BufferedReader nomFichier){
 		HashMap<Integer, ArrayList<Integer>> hm = new HashMap<Integer, ArrayList<Integer>>();
@@ -97,34 +127,46 @@ public class Graphe {
 				cpt = 0;
 				int ligneMax = ligne.length();
 				String nombre = "";
+				boolean MoinsUnTrouve = false;
+
 				for (int i = 0; i < ligneMax ; i++){
 
-					if(ligne.charAt(0) != ' '){
-						nombre += ligne.charAt(0);
-						if(i+1 != ligneMax){
+					if(!MoinsUnTrouve){
+						if(ligne.charAt(0) != ' '){
+							if(ligne.charAt(0) == '-' && ligne.charAt(1) == '1'){
+								MoinsUnTrouve = true;
+							}
+							else{
+								nombre += ligne.charAt(0);
+								if(i+1 != ligneMax){
+									ligne = ligne.substring(1);
+									if(ligne.charAt(0)==' '){
+										if (Integer.parseInt(nombre) != -1){
+											v.add(cpt, Integer.parseInt(nombre));
+											cpt++;
+											nombre="";
+										}					
+									}
+								}
+								else{
+									if(Integer.parseInt(nombre) != -1){
+										v.add(cpt, Integer.parseInt(nombre));
+										cpt++;
+										nombre="";
+									}
+								}
+							}
+						}
+						else {
+
 							ligne = ligne.substring(1);
-							if(ligne.charAt(0)==' '){
-								if (Integer.parseInt(nombre) != -1){
-									v.add(cpt, Integer.parseInt(nombre));
-									cpt++;
-									nombre="";
-								}					
-							}
 						}
-						else{
-							if(Integer.parseInt(nombre) != -1){
-								v.add(cpt, Integer.parseInt(nombre));
-								cpt++;
-								nombre="";
-							}
-						}
-					}
-					else {
 
-						ligne = ligne.substring(1);
 					}
 
+					else{}
 				} // Fin du for
+
 				hm.put(cpt2, v);
 				cpt2++;
 			}
@@ -163,7 +205,7 @@ public class Graphe {
 		Object i = a.getS1();
 		Object j = a.getS2();
 
-		boolean ok;
+		//boolean ok;
 		graphe.get(i).remove(j);
 		graphe.get(j).remove(i);
 	}
@@ -171,5 +213,11 @@ public class Graphe {
 	public void ajouterArete(int i, int j){
 		graphe.get(i).add(j);
 		graphe.get(j).add(i);
+	}
+
+	// Test si le graphe qui a été saisie est correcte.
+	public boolean testGraphe() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }
