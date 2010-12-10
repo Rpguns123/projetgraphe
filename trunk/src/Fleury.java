@@ -15,22 +15,22 @@ public class Fleury {
 	}
 
 	/*
-	 * Fonction qui test dans le graphe si il existe un chemin de i à j
+	 * Fonction qui test dans le graphe si il existe un chemin de i ï¿½ j
 	 * Graphe f : graphe dans lequel chercher le chemin
-	 * int i,j : point de départ et d'arrivé du chemin recherché
+	 * int i,j : point de dï¿½part et d'arrivï¿½ du chemin recherchï¿½
 	 * ArrayList ch : liste contenant la liste des chemins deja parcouru
 	 * int d : sommet en cours dans le parcours du graphe
 	 */
 	static boolean existeChemin(Graphe f, int i, int j, ArrayList<Integer> ch, int d) {
 		int tmp = -1; 
 		ch.add(d);
-		// Si ch ne contient qu'un élément, il faut eviter le chemin ij qui est l'arete ij. Similaire au fait de supprimer l'arrete ij du graphe f
+		// Si ch ne contient qu'un ï¿½lï¿½ment, il faut eviter le chemin ij qui est l'arete ij. Similaire au fait de supprimer l'arrete ij du graphe f
 		if(ch.size()==1){
 			tmp = chercherSommetSansB(f.getSommetsIncidents(d),ch,j); //on cherche un sommet voisin en evitant le sommet j
 			if(tmp == -1) return false; //Si aucun sommet n'est trouver, le chemin n'existe pas
 			else return existeChemin(f,i,j,ch,tmp);//sinon on continue notre chemin a partir du sommet trouve
 		}
-		else{//Cas ou ch contient plus d'un élément
+		else{//Cas ou ch contient plus d'un ï¿½lï¿½ment
 			tmp = chercherSommetAvecB(f.getSommetsIncidents(d),ch,j);//on cherche un sommet voisin de d avec en priorite le sommet j
 			if(tmp == -1) return false;//Si aucun sommet n'est trouver, le chemin n'existe pas
 			else if(tmp == j) return true;//Si le sommet trouver est j il existe un chemin entre i et j et on retourne true
@@ -100,26 +100,33 @@ public class Fleury {
 		int x = sommet;
 		Graphe f = g;
 
-		while(!f.getSommetsIncidents(x).isEmpty()){
-			Arete e = new Arete(x, f.getSommetsIncidents(x).get(0));
-			if(isthme(e, f)){
-				for(Integer v : f.getSommetsIncidents(x)){
-					e = new Arete (x,v);
-					if(!isthme(e, f)){
-						break;
-					}
-					else{
+		if(g.getSommetsIncidents(sommet).size() == 0)
+			return "Aucun cycle eulerien pour ce graphe !";
+
+		else{
+
+			while(!f.getSommetsIncidents(x).isEmpty()){
+				Arete e = new Arete(x, f.getSommetsIncidents(x).get(0));
+				if(isthme(e, f)){
+					for(Integer v : f.getSommetsIncidents(x)){
+						e = new Arete (x,v);
+						if(!isthme(e, f)){
+							break;
+						}
+						else{
+						}
 					}
 				}
+				x = e.getS2();
+				cycle += Integer.toString(x) + ' ';
+				f.enleverArete(e);
 			}
-			x = e.getS2();
-			cycle += Integer.toString(x) + ' ';
-			f.enleverArete(e);
+			if(x == sommet){
+				return cycle;
+			}
+			else
+				return "Aucun cycle eulerien pour ce graphe !";
 		}
-		if(x == sommet)
-			return cycle;
-		else
-			return "Aucun pour ce graphe !";
 	}
-
 }
+

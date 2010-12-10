@@ -28,11 +28,11 @@ public class Main {
 			int n = g.sommetDeDepart(); // Choix du sommet de depart pour le chercher le cycle eulerien
 			System.out.println("Cycle eulérien : " + Fleury.algoFleury(g, n)); // Affichage
 		} 
-		
+
 		else { // Graphe incorrecte car perte de voisin
 			System.out.println("Graphe incorrecte.\n" +
 					"Vous avez surement oublié quelque voisin ...\n" +
-					"Veuillez relancer le programme.");
+			"Veuillez relancer le programme.");
 		}
 
 	}
@@ -54,7 +54,7 @@ public class Main {
 	3 5 -1
 	4 3 -1
 	 */
-	
+
 
 	/*3
 	2 -1

@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Graphe {
 
@@ -31,83 +32,87 @@ public class Graphe {
 			BufferedReader clavier = new BufferedReader(new InputStreamReader(System.in));
 			String ligne = clavier.readLine(); // premiere ligne : nombre de sommets du graphe	
 			int ligneMax = ligne.length(); // Variable pour la longueur de la ligne
-			
+
 			if(ligneMax == 0){ // Si la longueur de la ligne est egale a zero, alors la fonction recommence
 				System.out.println("Saisie incorrecte.\nVeuillez resaisir tout le graphe, (en commençant par le nombre de sommet)."); // Message d'erreur
-				this.lireConsole();
+				lireConsole();
 			}
 
-			nbSommet = Integer.parseInt(ligne); // Mise a jour du nombre de sommet
+			try{
+				nbSommet = Integer.parseInt(ligne); // Mise a jour du nombre de sommet
+				ArrayList<Integer> v;
+				int cpt = 0;
+				int cpt2 = 1;
 
-			ArrayList<Integer> v;
-			int cpt = 0;
-			int cpt2 = 1;
+				for(int j = 0 ; j<nbSommet;j++){ // Boucle For pour parcourrir toutes les lignes, il y a autant de ligne que de sommet
+					ligne = clavier.readLine(); // Lecture d'une ligne
+					v = new ArrayList<Integer>();
+					cpt = 0;
+					ligneMax = ligne.length();
+					String nombre = "";
+					boolean MoinsUntrouve = false;
 
-			for(int j = 0 ; j<nbSommet;j++){ // Boucle For pour parcourrir toutes les lignes, il y a autant de ligne que de sommet
-				ligne = clavier.readLine(); // Lecture d'une ligne
-				v = new ArrayList<Integer>();
-				cpt = 0;
-				ligneMax = ligne.length();
-				String nombre = "";
-				boolean MoinsUntrouve = false;
+					if(ligneMax == 0){ // Si la ligne est vide
+						System.out.println("Saisie incorrecte.\nVeuillez resaisir tout le graphe, (en commençant par le nombre de sommet) :");
+						lireConsole();
+					}
 
-				if(ligneMax == 0){ // Si la ligne est vide
-					System.out.println("Saisie incorrecte.\nVeuillez resaisir tout le graphe, (en commençant par le nombre de sommet) :");
-					this.lireConsole();
-				}
-
-				else{
-					int i = 0;
-					while (!MoinsUntrouve){ // Tant qu'on ne se trouve pas a la fin de la ligne, c'est-a-dire tant qu'on ne trouve pas de '-1'
-						if(!MoinsUntrouve && i != ligneMax){	
-							if(ligne.charAt(0) == '-' && ligne.charAt(1) == '1'){
-								MoinsUntrouve = true;
-							}
-							else{
-								if(ligne.charAt(0) != ' '){
-									nombre += ligne.charAt(0);
-									if(i+1 != ligneMax){
-										ligne = ligne.substring(1);
-										if(ligne.charAt(0)==' '){
-											if (Integer.parseInt(nombre) != -1){
+					else{
+						int i = 0;
+						while (!MoinsUntrouve){ // Tant qu'on ne se trouve pas a la fin de la ligne, c'est-a-dire tant qu'on ne trouve pas de '-1'
+							if(!MoinsUntrouve && i != ligneMax){	
+								if(ligne.charAt(0) == '-' && ligne.charAt(1) == '1'){
+									MoinsUntrouve = true;
+								}
+								else{
+									if(ligne.charAt(0) != ' '){
+										nombre += ligne.charAt(0);
+										if(i+1 != ligneMax){
+											ligne = ligne.substring(1);
+											if(ligne.charAt(0)==' '){
+												if (Integer.parseInt(nombre) != -1){
+													v.add(cpt, Integer.parseInt(nombre)); // Ajout du nombre a la liste v a l'indice cpt
+													cpt++;
+													nombre=""; // MAJ du nombre
+												}					
+											}
+										}
+										else{
+											if(Integer.parseInt(nombre) != -1){
 												v.add(cpt, Integer.parseInt(nombre)); // Ajout du nombre a la liste v a l'indice cpt
 												cpt++;
 												nombre=""; // MAJ du nombre
-											}					
+											}
 										}
 									}
-									else{
-										if(Integer.parseInt(nombre) != -1){
-											v.add(cpt, Integer.parseInt(nombre)); // Ajout du nombre a la liste v a l'indice cpt
-											cpt++;
-											nombre=""; // MAJ du nombre
-										}
+
+									else { // Suppression de l'espace
+										ligne = ligne.substring(1);
 									}
 								}
-
-								else { // Suppression de l'espace
-									ligne = ligne.substring(1);
+							}
+							else{ 
+								if(i == ligneMax /*&& !MoinsUntrouve*/) { // Si bout de ligne mais pas de '-1' trouve
+									System.out.println("Il faut saisir '-1' à la fin de chaque ligne.\nVeuillez resaisir tout le graphe, (en commençant par le nombre de sommet).");
+									lireConsole();
+									//break; 
 								}
-							}
-						}
-						else{ 
-							if(i == ligneMax /*&& !MoinsUntrouve*/) { // Si bout de ligne mais pas de '-1' trouve
-								System.out.println("Il faut saisir '-1' à la fin de chaque ligne.\nVeuillez resaisir tout le graphe, (en commençant par le nombre de sommet).");
-								this.lireConsole();
-								//break; 
-							}
-						} 
-						i++;
+							} 
+							i++;
 
-					} // Fin de la boucle while, '-1' trouve => fin de ligne Ok 
-					
-					hm.put(cpt2, v); // MAJ de la HashMap : Ajout de la liste v a l'indice cpt2
-					cpt2++;
-				} // Fin du else 
-			} // Fin du for, Saisie a la console terminee
-			graphe = hm; // MAJ du graphe
-		} // Fin du try
+						} // Fin de la boucle while, '-1' trouve => fin de ligne Ok 
 
+						hm.put(cpt2, v); // MAJ de la HashMap : Ajout de la liste v a l'indice cpt2
+						cpt2++;
+					} // Fin du else 
+				} // Fin du for, Saisie a la console terminee
+				graphe = hm; // MAJ du graphe
+			} // Fin du try
+			catch (NumberFormatException nfe){
+				System.out.println("Saisie incorrecte.\nIl faut rentrer des nombres pour designer vos sommets.\nVeuillez resaisir tout le graphe, (en commençant par le nombre de sommet) :");
+				lireConsole();
+			}
+		}
 		catch (Exception e){ // Gestion des exceptions
 			System.out.println(e.toString());
 		}
@@ -133,90 +138,97 @@ public class Graphe {
 				System.exit(0);
 			}
 
-			nbSommet = Integer.parseInt(ligne); // Mise a jour du nombre de sommet
+			try{
+				nbSommet = Integer.parseInt(ligne); // Mise a jour du nombre de sommet
 
-			ArrayList<Integer> v;
-			int cpt = 0;
-			int cpt2 = 1;
+				ArrayList<Integer> v;
+				int cpt = 0;
+				int cpt2 = 1;
 
-			int j = 0;
+				int j = 0;
 
-			while ((ligne = br.readLine()) != null){ // Boucle pour parcourrir toutes les lignes
-				v = new ArrayList<Integer>();
-				cpt = 0;
-				ligneMax = ligne.length();
-				String nombre = "";
-				boolean MoinsUnTrouve = false;
+				while ((ligne = br.readLine()) != null){ // Boucle pour parcourrir toutes les lignes
+					v = new ArrayList<Integer>();
+					cpt = 0;
+					ligneMax = ligne.length();
+					String nombre = "";
+					boolean MoinsUnTrouve = false;
 
-				if(ligneMax == 0){ // Si la ligne est vide
-					System.out.println("########");
-					System.out.println("Erreur a la ligne " + (j+2));
-					if((j+1) == 1) 
-						System.out.println("Saisie incorrecte.\nIl faut rentrer les voisins du premier sommet.");
-					else
-						System.out.println("Saisie incorrecte.\nIl faut rentrer les voisins du " + (j+1) + "ieme sommet.");
-					System.out.println("Veuillez relancer le programme.");
-					System.out.println("########");
-					System.exit(0);
-				}
+					if(ligneMax == 0){ // Si la ligne est vide
+						System.out.println("########");
+						System.out.println("Erreur a la ligne " + (j+2));
+						if((j+1) == 1) 
+							System.out.println("Saisie incorrecte.\nIl faut rentrer les voisins du premier sommet.");
+						else
+							System.out.println("Saisie incorrecte.\nIl faut rentrer les voisins du " + (j+1) + "ieme sommet.");
+						System.out.println("Veuillez relancer le programme.");
+						System.out.println("########");
+						System.exit(0);
+					}
 
-				else{
-					int i = 0;
-					while (!MoinsUnTrouve){ // Tant qu'on ne se trouve pas a la fin de la ligne, c'est-a-dire tant qu'on ne trouve pas de '-1'
-						if(!MoinsUnTrouve && i != ligneMax){	
-							if(ligne.charAt(0) == '-' && ligne.charAt(1) == '1'){
-								MoinsUnTrouve = true;
-							}
-							else{
-								if(ligne.charAt(0) != ' '){
-									nombre += ligne.charAt(0);
-									if(i+1 != ligneMax){
-										ligne = ligne.substring(1);
-										if(ligne.charAt(0)==' '){
-											if (Integer.parseInt(nombre) != -1){
+					else{
+						int i = 0;
+						while (!MoinsUnTrouve){ // Tant qu'on ne se trouve pas a la fin de la ligne, c'est-a-dire tant qu'on ne trouve pas de '-1'
+							if(!MoinsUnTrouve && i != ligneMax){	
+								if(ligne.charAt(0) == '-' && ligne.charAt(1) == '1'){
+									MoinsUnTrouve = true;
+								}
+								else{
+									if(ligne.charAt(0) != ' '){
+										nombre += ligne.charAt(0);
+										if(i+1 != ligneMax){
+											ligne = ligne.substring(1);
+											if(ligne.charAt(0)==' '){
+												if (Integer.parseInt(nombre) != -1){
+													v.add(cpt, Integer.parseInt(nombre)); // Ajout du nombre a la liste v a l'indice cpt
+													cpt++;
+													nombre=""; // MAJ du nombre
+													//affiche(v);
+												}			 
+											}
+										}
+										else{
+											if(Integer.parseInt(nombre) != -1){
 												v.add(cpt, Integer.parseInt(nombre)); // Ajout du nombre a la liste v a l'indice cpt
 												cpt++;
 												nombre=""; // MAJ du nombre
-												//affiche(v);
-											}			 
+											}
 										}
 									}
-									else{
-										if(Integer.parseInt(nombre) != -1){
-											v.add(cpt, Integer.parseInt(nombre)); // Ajout du nombre a la liste v a l'indice cpt
-											cpt++;
-											nombre=""; // MAJ du nombre
-										}
+									else { // Suppression de l'espace
+										ligne = ligne.substring(1);
 									}
 								}
-								else { // Suppression de l'espace
-									ligne = ligne.substring(1);
+
+							}
+							else{ 
+								if(i == ligneMax /*&& !MoinsUnTrouve*/) { // Arriver au bout de la ligne sans -1
+									System.out.println("########");
+									System.out.println("Erreur a la ligne " + (j+2) + ", colonne " + (i+1));
+									System.out.println("Il faut saisir '-1' à la fin de chaque ligne dans votre fichier (excepter la premiere ligne, nombre de sommet).");
+									System.out.println("Veuillez relancer le programme.");
+									System.out.println("########");
+									System.exit(0); 
 								}
 							}
+							i++;
+						} // Fin de la boucle while, '-1' trouve => fin de ligne Ok
 
-						}
-						else{ 
-							if(i == ligneMax /*&& !MoinsUnTrouve*/) { // Arriver au bout de la ligne sans -1
-								System.out.println("########");
-								System.out.println("Erreur a la ligne " + (j+2) + ", colonne " + (i+1));
-								System.out.println("Il faut saisir '-1' à la fin de chaque ligne dans votre fichier (excepter la premiere ligne, nombre de sommet).");
-								System.out.println("Veuillez relancer le programme.");
-								System.out.println("########");
-								System.exit(0); 
-							}
-						}
-						i++;
-					} // Fin de la boucle while, '-1' trouve => fin de ligne Ok
+						hm.put(cpt2, v); // MAJ de la HashMap : Ajout de la liste v a l'indice cpt2
+						cpt2++;
+					} // Fin du else 
+					j++;
+				} // Fin du for, a la fin du fichier
+				br.close(); 
+				graphe = hm; // MAJ du graphe
+				System.out.println("Le fichier a été lu avec succes.");
+			} // Fin du try
 
-					hm.put(cpt2, v); // MAJ de la HashMap : Ajout de la liste v a l'indice cpt2
-					cpt2++;
-				} // Fin du else 
-				j++;
-			} // Fin du for, a la fin du fichier
-			br.close(); 
-			graphe = hm; // MAJ du graphe
-			System.out.println("Le fichier a été lu avec succes.");
-		} // Fin du try
+			catch (NumberFormatException nfe){
+				System.out.println("Saisie incorrecte.\nIl faut rentrer des nombres pour designer vos sommets.\nVeuillez relancer le programme.");
+				System.exit(0);
+			}
+		}
 		catch (Exception e){ // Gestion des exceptions
 			System.out.println(e.toString());
 		}
@@ -262,19 +274,31 @@ public class Graphe {
 		graphe.get(j).add(i);
 	}
 
+	public boolean existSommet(int i, int j){
+		ArrayList<Integer> l = getSommetsIncidents(i);
+		Iterator<Integer> it = l.iterator();
+		while (it.hasNext()){
+			int k = it.next();
+			if(k == j){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// Test si le graphe qui a ete saisi est correcte.
 	public boolean testGraphe() {
-		/*for (int i = 1; i < graphe.size()+1 ;i++){
+		for (int i = 1; i < graphe.size()+1 ;i++){
 			ArrayList l = graphe.get(i);
 			if(!l.isEmpty()){
-				for (int j = 0; i <= l.size(); i++){
-					System.out.println("l.get(j) = " + l.get(j) + " et graphe.get(i).iterator().next() = " + graphe.get(i).iterator().next());
-					for (int k = 0; k <= l.size(); k++)
-						if()
+				Iterator<Integer> it = l.iterator();
+				while(it.hasNext()){
+					int j = it.next();
+					if(!existSommet(j, i))
 						return false;
 				}
 			}
-		}*/
+		}
 		return true;
 	}
 
@@ -288,15 +312,32 @@ public class Graphe {
 		String tmp;
 		try {
 			tmp = br.readLine();
-			int n = Integer.parseInt(tmp); 
-			System.out.println("***************\n");		
-			//System.out.println("Sommet du debut : " + n);
-			//System.out.println();
-			return n;
+			try{
+				int n = Integer.parseInt(tmp); 
+				System.out.println("***************\n");		
+				//System.out.println("Sommet du debut : " + n);
+				//System.out.println();
+				
+				if( n <= getNbSommet())
+					return n;
+				else {
+					System.out.println("Graphe incorrecte.\n" +
+					"Vous devez saisir un numero de sommet ...\n");
+					return sommetDeDepart();
+				}
+			}
+			catch (NumberFormatException nfe){
+				System.out.println("Saisie incorrecte.\nIl faut rentrer un numero de sommet.\nVeuillez resaisir tout le graphe, (en commençant par le nombre de sommet) :");
+				return sommetDeDepart();
+			}
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 			return -1;
 		}
+	}
+
+	public int getNbSommet() {
+		return nbSommet;
 	}
 }
