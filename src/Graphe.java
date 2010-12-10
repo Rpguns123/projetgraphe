@@ -275,15 +275,18 @@ public class Graphe {
 	}
 
 	public boolean existSommet(int i, int j){
-		ArrayList<Integer> l = getSommetsIncidents(i);
-		Iterator<Integer> it = l.iterator();
-		while (it.hasNext()){
-			int k = it.next();
-			if(k == j){
-				return true;
+		if( j <= getNbSommet() && i<=getNbSommet()){
+			ArrayList<Integer> l = getSommetsIncidents(i);
+			Iterator<Integer> it = l.iterator();
+			while (it.hasNext()){
+				int k = it.next();
+				if(k == j)
+					return true;
 			}
+			return false; 
 		}
-		return false;
+		else
+			return false;
 	}
 
 	// Test si le graphe qui a ete saisi est correcte.
@@ -317,7 +320,7 @@ public class Graphe {
 				System.out.println("***************\n");		
 				//System.out.println("Sommet du debut : " + n);
 				//System.out.println();
-				
+
 				if( n <= getNbSommet())
 					return n;
 				else {
