@@ -31,7 +31,7 @@ public class Graphe {
 			BufferedReader clavier = new BufferedReader(new InputStreamReader(System.in));
 			String ligne = clavier.readLine(); // premiere ligne : nombre de sommets du graphe	
 			int ligneMax = ligne.length(); // Variable pour la longueur de la ligne
-
+			
 			if(ligneMax == 0){ // Si la longueur de la ligne est egale a zero, alors la fonction recommence
 				System.out.println("Saisie incorrecte.\nVeuillez resaisir tout le graphe, (en commençant par le nombre de sommet)."); // Message d'erreur
 				this.lireConsole();
