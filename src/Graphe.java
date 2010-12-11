@@ -274,6 +274,7 @@ public class Graphe {
 		graphe.get(j).add(i);
 	}
 
+	// Fonction booleenne déterminant si le sommet i existe dans la liste adjacence de j
 	public boolean existSommet(int i, int j){
 		if( j <= getNbSommet() && i<=getNbSommet()){
 			ArrayList<Integer> l = getSommetsIncidents(i);
